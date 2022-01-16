@@ -4,7 +4,7 @@ public class GameManager : MonoBehaviour
 {
     #region [var]
 
-    #region [01. Instance]
+    #region [01. instance]
     
     /// <summary>
     /// インスタンス
@@ -13,7 +13,15 @@ public class GameManager : MonoBehaviour
 
     #endregion
     
-    
+    #region [02. reference]
+
+    /// <summary>
+    /// MapGenerator
+    /// </summary>
+    [SerializeField]
+    private MapGenerator mapGenerator;
+
+    #endregion
 
     #endregion
 
