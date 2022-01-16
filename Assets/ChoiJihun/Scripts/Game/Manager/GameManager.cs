@@ -48,7 +48,23 @@ public class GameManager : MonoBehaviour
         
         // 画面スリープ不可
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        
+        // マップ自動生成シーケンス
+        this.MapGeneratingSequence();
     }
+
+    #region [01. Map Generating Sequence]
+
+    /// <summary>
+    /// マップ自動生成シーケンス
+    /// </summary>
+    private void MapGeneratingSequence()
+    {
+        // 開始
+        this.mapGenerator.StartGenerating();
+    }
+
+    #endregion
 
     #endregion
 }

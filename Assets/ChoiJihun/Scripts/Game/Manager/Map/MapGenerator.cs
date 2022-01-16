@@ -44,5 +44,13 @@ public class MapGenerator : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    /// <summary>
+    /// 自動生成開始
+    /// </summary>
+    public void StartGenerating()
+    {
+        Debug.LogFormat("MapGenerating Started", DColor.cyan);
+    }
+
     #endregion
 }
