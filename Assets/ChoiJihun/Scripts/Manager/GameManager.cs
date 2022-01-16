@@ -1,14 +1,23 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    #region [var]
+
+    #region [01. Instance]
+    
     /// <summary>
     /// インスタンス
     /// </summary>
     public static GameManager Instance { get; private set; }
+
+    #endregion
+    
+    
+
+    #endregion
+
+    #region [func]
 
     /// <summary>
     /// コンストラクタ
@@ -19,6 +28,9 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
     }
 
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
     private void Start()
     {
         // インスタンス
@@ -29,4 +41,6 @@ public class GameManager : MonoBehaviour
         // 画面スリープ不可
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
+
+    #endregion
 }
