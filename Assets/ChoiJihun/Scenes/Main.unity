@@ -286,7 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e3012ce3096cd349bf311bc6fbc6555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapGeneratingManager: {fileID: 0}
+  mapGeneratingManager: {fileID: 748805229}
 --- !u!4 &860049668
 Transform:
   m_ObjectHideFlags: 0
@@ -337,7 +337,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.20558916, g: 0.2870634, b: 0.41509432, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
