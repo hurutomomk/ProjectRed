@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapGenerator : MonoBehaviour
+public class MapGeneratingManager : MonoBehaviour
 {
     #region [var]
 
@@ -11,7 +11,7 @@ public class MapGenerator : MonoBehaviour
     /// <summary>
     /// インスタンス
     /// </summary>
-    public static MapGenerator Instance { get; private set; }
+    public static MapGeneratingManager Instance { get; private set; }
 
     #endregion
     

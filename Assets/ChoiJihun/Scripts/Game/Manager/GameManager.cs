@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class GameManager : MonoBehaviour
     /// MapGenerator
     /// </summary>
     [SerializeField]
-    private MapGenerator mapGenerator;
+    private MapGeneratingManager mapGeneratingManager;
 
     #endregion
 
@@ -61,7 +62,7 @@ public class GameManager : MonoBehaviour
     private void MapGeneratingSequence()
     {
         // 開始
-        this.mapGenerator.StartGenerating();
+        this.mapGeneratingManager.StartGenerating();
     }
 
     #endregion
