@@ -8,6 +8,12 @@ TextureImporter:
   - first:
       213: 4843347942248878417
     second: Tileset_Minimap_1
+  - first:
+      213: 7679234016847234628
+    second: Tileset_MiniMap_0
+  - first:
+      213: -171053851869594126
+    second: Tileset_MiniMap_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -121,7 +127,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tileset_Minimap_0
+      name: Tileset_MiniMap_0
       rect:
         serializedVersion: 2
         x: 0
@@ -135,14 +141,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b358cb0bbdd284920800000000000000
-      internalID: 2974677975464445243
+      spriteID: 4468649e6ae129a60800000000000000
+      internalID: 7679234016847234628
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tileset_Minimap_1
+      name: Tileset_MiniMap_1
       rect:
         serializedVersion: 2
         x: 32
@@ -156,8 +162,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1511d55da47073340800000000000000
-      internalID: 4843347942248878417
+      spriteID: 2fdb9d19d6b40adf0800000000000000
+      internalID: -171053851869594126
       vertices: []
       indices: 
       edges: []
