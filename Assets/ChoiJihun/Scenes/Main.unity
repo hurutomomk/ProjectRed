@@ -194,6 +194,8 @@ GameObject:
   m_Component:
   - component: {fileID: 748805230}
   - component: {fileID: 748805229}
+  - component: {fileID: 748805231}
+  - component: {fileID: 748805232}
   m_Layer: 0
   m_Name: MapGeneratingManager
   m_TagString: Untagged
@@ -213,6 +215,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b8e9122c1966514897203cb2d8186f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapCollector: {fileID: 748805232}
+  gridManager: {fileID: 748805231}
+  mapStart:
+  - {fileID: 6441807022860676097, guid: 8810187084f38fb438708485a0da7062, type: 3}
+  mapRoot: {fileID: 2060151945}
 --- !u!4 &748805230
 Transform:
   m_ObjectHideFlags: 0
@@ -227,6 +234,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &748805231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748805228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0e0d6234462b6640a4c374c21239a91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextPosXInterval: 6
+  nextPosYInterval: 6
+--- !u!114 &748805232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748805228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5acb56fd932340e49bd851f32c7f346f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collectedMapList: []
 --- !u!1 &751619575
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,7 +458,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2060151945}
   m_Layer: 0
-  m_Name: Map
+  m_Name: MapRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
