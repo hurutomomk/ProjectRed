@@ -7,69 +7,92 @@ using UnityEngine;
 
 public class NextMapGenerateController : MonoBehaviour
 {
-    [SerializeField] private MapInfo mapInfo;
-
+    #region [var]
+    
+    #region [01. reference]
+    /// <summary>
+    /// Map情報
+    /// </summary>
+    [SerializeField] 
+    private MapInfo mapInfo;
+    #endregion
+    
+    #region [02. map data]
+    /// <summary>
+    /// トリガー
+    /// </summary>
     private bool hasNorthDoor = false;
     private bool hasEastDoor = false;
     private bool hasSouthDoor = false;
     private bool hasWestDoor = false;
-
-    private int doorDirectionNum;
+    #endregion
     
+    #endregion
+
+
+    #region [func]
     /// <summary>
     /// コンストラクタ
     /// </summary>
     private void Start()
     {
-        Debug.LogFormat("00000000000000000000", DColor.yellow);
-        
-        // 
+        // Door方向チェック
         CheckDoorDirection();
     }
 
     /// <summary>
-    /// 
+    /// Door方向チェック
     /// </summary>
     private void CheckDoorDirection()
     {
         if(this.mapInfo.HasNorthDoor)
+            // Door方向にMapがあるかを判定
             this.CheckSpawnedMapOnNextPos(0);
         
         if(this.mapInfo.HasEastDoor)
+            // Door方向にMapがあるかを判定
             this.CheckSpawnedMapOnNextPos(1);
     
         if(this.mapInfo.HasSouthDoor)
+            // Door方向にMapがあるかを判定
             this.CheckSpawnedMapOnNextPos(2);
         
         if(this.mapInfo.HasWestDoor)
+            // Door方向にMapがあるかを判定
             this.CheckSpawnedMapOnNextPos(3);
     }
 
     /// <summary>
-    /// 
+    /// Door方向にMapがあるかを判定
     /// </summary>
     /// <param name="doorDirection"></param>
     private void CheckSpawnedMapOnNextPos(int doorDirection)
     {
+        // 次のMap座標
         var nextMapPos = 
             GridManager.Instance.NextGridPos(this.transform.position, doorDirection);
 
+        // 次のMap座標にすでにMapがある場合
         if (MapCollector.Instance.CheckMapPosWithList(nextMapPos))
             return;
         else
         {
-            this.CheckSpawnedMapOnFuturePosWithNorthDoor(nextMapPos, () =>
+            // North方向にMap有無チェック
+            this.CheckSpawnedMapOnFuturePos(nextMapPos, 0, () =>
             {
-                this.CheckSpawnedMapOnFuturePosWithEastDoor(nextMapPos, () =>
+                // East方向にMap有無チェック
+                this.CheckSpawnedMapOnFuturePos(nextMapPos, 1, () =>
                 {
-                    this.CheckSpawnedMapOnFuturePosWithSouthDoor(nextMapPos, () =>
+                    // South方向にMap有無チェック
+                    this.CheckSpawnedMapOnFuturePos(nextMapPos, 2, () =>
                     {
-                        this.CheckSpawnedMapOnFuturePosWithWestDoor(nextMapPos, () =>
+                        // West方向にMap有無チェック
+                        this.CheckSpawnedMapOnFuturePos(nextMapPos, 3, () =>
                         {
-                            this.doorDirectionNum = 
-                                this.SetDoorDirectionNum(this.hasNorthDoor, this.hasEastDoor, this.hasSouthDoor, this.hasWestDoor);
-
-                            this.GenerateNextMap(nextMapPos, this.doorDirectionNum);
+                            // 次のMap生成
+                            this.GenerateNextMap(nextMapPos, 
+                                // Doorパターンナンバー
+                                this.SetDoorDirectionNum(this.hasNorthDoor, this.hasEastDoor, this.hasSouthDoor, this.hasWestDoor));
                         });
                     });
                 });
@@ -77,158 +100,65 @@ public class NextMapGenerateController : MonoBehaviour
         }
     }
 
-    private void CheckSpawnedMapOnFuturePosWithNorthDoor(Vector2 nextPos, Action onFinished)
+    /// <summary>
+    /// Map有無チェック
+    /// </summary>
+    /// <param name="nextPos"></param>
+    /// <param name="doorDirection"></param>
+    /// <param name="onFinished"></param>
+    private void CheckSpawnedMapOnFuturePos(Vector2 nextPos, int doorDirection, Action onFinished)
     {
-        var futureMapPos = GridManager.Instance.NextGridPos(nextPos, 0);
+        // その次のMap座標
+        var futureMapPos = GridManager.Instance.NextGridPos(nextPos, doorDirection);
+        // Door判定
+        var isThereDoor = !MapCollector.Instance.CheckMapPosWithList(futureMapPos);
+        switch (doorDirection)
+        {
+            case 0:
+                this.hasNorthDoor = isThereDoor;
+                break;
+            case 1:
+                this.hasEastDoor = isThereDoor;
+                break;
+            case 2:
+                this.hasSouthDoor = isThereDoor;
+                break;
+            case 3:
+                this.hasWestDoor = isThereDoor;
+                break;
+        }
 
-        this.hasNorthDoor = !MapCollector.Instance.CheckMapPosWithList(futureMapPos);
-        
-        onFinished?.Invoke();
-    }
-    
-    private void CheckSpawnedMapOnFuturePosWithEastDoor(Vector2 nextPos, Action onFinished)
-    {
-        var futureMapPos = GridManager.Instance.NextGridPos(nextPos, 1);
-
-        this.hasEastDoor = !MapCollector.Instance.CheckMapPosWithList(futureMapPos);
-        
-        onFinished?.Invoke();
-    }
-    
-    private void CheckSpawnedMapOnFuturePosWithSouthDoor(Vector2 nextPos, Action onFinished)
-    {
-        var futureMapPos = GridManager.Instance.NextGridPos(nextPos, 2);
-
-        this.hasSouthDoor = !MapCollector.Instance.CheckMapPosWithList(futureMapPos);
-        
-        onFinished?.Invoke();
-    }
-    
-    private void CheckSpawnedMapOnFuturePosWithWestDoor(Vector2 nextPos, Action onFinished)
-    {
-        var futureMapPos = GridManager.Instance.NextGridPos(nextPos, 3);
-
-        this.hasWestDoor = !MapCollector.Instance.CheckMapPosWithList(futureMapPos);
-        
         onFinished?.Invoke();
     }
 
+    /// <summary>
+    /// Doorパータンナンバー
+    /// </summary>
+    /// <param name="north"></param>
+    /// <param name="east"></param>
+    /// <param name="south"></param>
+    /// <param name="west"></param>
+    /// <returns></returns>
     private int SetDoorDirectionNum(bool north, bool east, bool south, bool west)
     {
-        var directionNum = 0;
-        
         if (north)
         {
-            if (east)
-            {
-                if (south)
-                {
-                    if (west)
-                    {
-                        directionNum = 1;
-                    }
-                    else
-                    {
-                        directionNum = 2;
-                    }
-                }
-                else
-                {
-                    if (west)
-                    {
-                        directionNum = 3;
-                    }
-                    else
-                    {
-                        directionNum = 4;
-                    }
-                }
-            }
-            else
-            {
-                if (south)
-                {
-                    if (west)
-                    {
-                        directionNum = 5;
-                    }
-                    else
-                    {
-                        directionNum = 6;
-                    }
-                }
-                else
-                {
-                    if (west)
-                    {
-                        directionNum = 7;
-                    }
-                    else
-                    {
-                        directionNum = 8;
-                    }
-                }
-            }
+            return east ? south ? west ? 1 : 2 : west ? 3 : 4 : south ? west ? 5 : 6 : west ? 7 : 8;
         }
         else
         {
-            if (east)
-            {
-                if (south)
-                {
-                    if (west)
-                    {
-                        directionNum = 9;
-                    }
-                    else
-                    {
-                        directionNum = 10;
-                    }
-                }
-                else
-                {
-                    if (west)
-                    {
-                        directionNum = 11;
-                    }
-                    else
-                    {
-                        directionNum = 12;
-                    }
-                }
-            }
-            else
-            {
-                if (south)
-                {
-                    if (west)
-                    {
-                        directionNum = 13;
-                    }
-                    else
-                    {
-                        directionNum = 14;
-                    }
-                }
-                else
-                {
-                    if (west)
-                    {
-                        directionNum = 15;
-                    }
-                    else
-                    {
-                        directionNum = 16;
-                    }
-                }
-            }
+            return east ? south ? west ? 9 : 10 : west ? 11 : 12 : south ? west ? 13 : 14 : west ? 15 : 16;
         }
-
-        return directionNum;
     } 
 
+    /// <summary>
+    /// 次のMapを生成
+    /// </summary>
+    /// <param name="nextMapPos"></param>
+    /// <param name="doorDirectionNum"></param>
     private void GenerateNextMap(Vector2 nextMapPos, int doorDirectionNum)
     {
         Debug.LogFormat($" nextMapPos = {nextMapPos}   :::::    doorDirectionNum = {doorDirectionNum}");
     }
+    #endregion
 }
