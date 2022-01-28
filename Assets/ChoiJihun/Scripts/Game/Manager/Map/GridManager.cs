@@ -5,19 +5,36 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
+    #region [var]
+
+    #region [01. instance]
     public static GridManager Instance { get; set; }
+    #endregion
     
+    #region [02. base grid information]
     // マップ座標の間隔
-    [SerializeField] private float nextPosXInterval;
-    [SerializeField] private float nextPosYInterval;
+    [SerializeField] 
+    private float nextPosXInterval;
+    [SerializeField] 
+    private float nextPosYInterval;
+    #endregion
     
+    #endregion
+    
+    
+    
+    #region [func]
+    
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
     public void Start()
     {
         Instance = this;
     }
     
     /// <summary>
-    /// 次の座標計算
+    /// 次の座標を計算
     /// </summary>
     /// <param name="prevPos"></param>
     /// <param name="directionNum"></param>
@@ -58,4 +75,5 @@ public class GridManager : MonoBehaviour
         
         return nextPos;
     }
+    #endregion
 }
