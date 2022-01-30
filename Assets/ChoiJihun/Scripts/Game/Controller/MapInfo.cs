@@ -41,6 +41,17 @@ public class MapInfo : MonoBehaviour
     {
         get => hasWestDoor;
     }
-    #endregion
+
+    /// <summary>
+    /// Map単体が持つmapCollectNum
+    /// </summary>
+    [SerializeField]
+    private int mapCollectNum = 0;
+    public int MapCollectNum
+    {
+        get => mapCollectNum;
+    }
     
+    #endregion
+
 }
