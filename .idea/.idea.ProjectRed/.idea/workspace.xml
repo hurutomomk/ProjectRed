@@ -6,8 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="97076389-5cdf-4f7d-9f0f-7f7ecac19b1a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectRed/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectRed/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ChoiJihun/Resources/BuiltInData/TileMap/Tiles/MiniMap/Tileset_Minimap_0.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ChoiJihun/Resources/BuiltInData/TileMap/Tiles/MiniMap/Tileset_Minimap_0.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ChoiJihun/Resources/BuiltInData/TileMap/Tiles/MiniMap/Tileset_Minimap_1.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ChoiJihun/Resources/BuiltInData/TileMap/Tiles/MiniMap/Tileset_Minimap_1.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ChoiJihun/Resources/BuiltInData/Map/Prefabs/GridMapTestSample.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ChoiJihun/Resources/BuiltInData/Map/Prefabs/GridMapTestSample.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ChoiJihun/Scenes/Main.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ChoiJihun/Scenes/Main.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Controller/MapInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Controller/MapInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Controller/NextMapGenerateController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Controller/NextMapGenerateController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Manager/Map/MapCollector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Manager/Map/MapCollector.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Manager/Map/MapGeneratingManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Manager/Map/MapGeneratingManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +48,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="rider.run.widget.enabled.cache" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C#" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
@@ -87,6 +91,8 @@
       <workItem from="1643245797402" duration="1582000" />
       <workItem from="1643247436750" duration="15280000" />
       <workItem from="1643295286838" duration="84000" />
+      <workItem from="1643408100428" duration="19056000" />
+      <workItem from="1643470523697" duration="3942000" />
     </task>
     <servers />
   </component>
@@ -109,5 +115,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
