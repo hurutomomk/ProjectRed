@@ -15,11 +15,31 @@ public class MapCollector : MonoBehaviour
     public static MapCollector Instance { get; set; }
     #endregion
     
-    #region [03. map data]
+    #region [02. map data]
     /// <summary>
     /// 生成したMapのリスト
     /// </summary>
     public List<GameObject> collectedMapList = new List<GameObject>();
+    /// <summary>
+    /// 現在のMapCollectNum
+    /// </summary>
+    [SerializeField]
+    public int currentTotalMapCollectNum = 0;
+    public int CurrentTotalMapCollectNum
+    {
+        get => currentTotalMapCollectNum;
+    }
+    #endregion
+    
+    #region [03. temporary saving info]
+    /// <summary>
+    /// 座標検索でマッチしたマップのGameObjectを一時的に保存
+    /// </summary>
+    private GameObject tempMatchedMap = null;
+    public GameObject TempMatchedMap
+    {
+        get => tempMatchedMap;
+    }
     #endregion
     
     #endregion
@@ -54,16 +74,34 @@ public class MapCollector : MonoBehaviour
     {
         var isMatched = false;
         
-        foreach (GameObject mapTransform in collectedMapList)
+        foreach (GameObject mapGameObject in collectedMapList)
         {
-            if (mapTransform.transform.position == new Vector3(targetMapPos.x, targetMapPos.y, 0))
+            if (mapGameObject.transform.position == new Vector3(targetMapPos.x, targetMapPos.y, 0))
             {
-                Debug.LogFormat($" TargetPos = {targetMapPos}    :::::    ExistMapPos = {mapTransform.transform.position}");
                 isMatched = true;
+                // 該当するMapのGameObjectを保存
+                this.SaveMatchedMap(mapGameObject);
             }
         }
 
         return isMatched;
+    }
+
+    /// <summary>
+    /// 座標検索でマッチしたGameObjectをTempMatchedMap保存
+    /// </summary>
+    /// <param name="matchedMap"></param>
+    private void SaveMatchedMap(GameObject matchedMap)
+    {
+        this.tempMatchedMap = matchedMap;
+    }
+
+    /// <summary>
+    /// 保存したTempMatchedMapをnullに変更
+    /// </summary>
+    public void DeleteSavedTempMatchedMap()
+    {
+        this.tempMatchedMap = null;
     }
 
     #endregion
