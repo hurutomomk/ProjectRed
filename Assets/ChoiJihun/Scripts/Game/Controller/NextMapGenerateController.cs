@@ -165,6 +165,13 @@ public class NextMapGenerateController : MonoBehaviour
             }
         }
 
+        
+        Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count + 1} :::");
+        Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count + 1} ::: futureMapPos = {futureMapPos}");
+        Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count + 1} ::: N = {this.hasNorthDoor} ::: E = {this.hasEastDoor}" +
+                        $" ::: S = {this.hasSouthDoor} ::: W = {this.hasWestDoor}");
+        Debug.LogFormat($" ");
+        
         onFinished?.Invoke();
     }
 
@@ -228,8 +235,8 @@ public class NextMapGenerateController : MonoBehaviour
                 creatTarget = MapGeneratingManager.Instance.MapTypeNW[randomNum];
                 break;
             case 8:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeW.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeW[randomNum];
+                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeN.Count);
+                creatTarget = MapGeneratingManager.Instance.MapTypeN[randomNum];
                 break;
             case 9:
                 randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeESW.Count);
@@ -274,9 +281,9 @@ public class NextMapGenerateController : MonoBehaviour
             MapCollector.Instance.AddMapToList(instancedMap);
             MapCollector.Instance.currentTotalMapCollectNum += this.mapInfo.MapCollectNum;
             
-            Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count} :::");
-            Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count} ::: nextMapPos = {nextMapPos}");
-            Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count} ::: doorDirectionNum = {doorDirectionNum}");
+            Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count} :::", DColor.cyan);
+            Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count} ::: nextMapPos = {nextMapPos}", DColor.cyan);
+            Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count} ::: doorDirectionNum = {doorDirectionNum}", DColor.cyan);
             Debug.LogFormat($" ");
         }
         else
