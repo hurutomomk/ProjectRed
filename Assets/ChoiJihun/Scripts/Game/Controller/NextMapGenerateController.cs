@@ -7,18 +7,21 @@ using UnityEngine;
 public class NextMapGenerateController : MonoBehaviour
 {
     #region [var]
-    
+
     #region [01. reference]
+
     /// <summary>
     /// Map情報
     /// </summary>
-    [SerializeField] 
+    [SerializeField]
     private MapInfo mapInfo;
+
     #endregion
-    
+
     #region [02. map data]
+
     /// <summary>
-    /// トリガー
+    /// 確実にドアが存在する場合のトリガー
     /// </summary>
     private bool hasNorthDoor = false;
     private bool hasEastDoor = false;
@@ -26,23 +29,31 @@ public class NextMapGenerateController : MonoBehaviour
     private bool hasWestDoor = false;
 
     /// <summary>
-    /// 次のマップ生成方向の順番をリストアップ
+    /// ドアの存在がどちらでもいい場合のトリガー
     /// </summary>
-    private List<int> doorDirectionNumList = new List<int>(){0, 1, 2, 3};
+    private bool doesNorthDoorNotMatter = false;
+    private bool doesEastDoorNotMatter = false;
+    private bool doesSouthDoorNotMatter = false;
+    private bool doesWestDoorNotMatter = false;
+
+    public List<string> mustHaveDoorDirection = new List<string>();
+    public List<string> neverHaveDoorDirection = new List<string>();
+
+    public List<GameObject> tempQueueList = new List<GameObject>();
+    public List<GameObject> generatingQueueList = new List<GameObject>();
+    public List<GameObject> removingQueueList = new List<GameObject>();
     #endregion
-    
+
     #endregion
 
 
     #region [func]
+
     /// <summary>
     /// コンストラクタ
     /// </summary>
     private void Start()
     {
-        // Listの中身をランダムに並び替え
-        this.doorDirectionNumList = this.doorDirectionNumList.OrderBy(a => Guid.NewGuid()).ToList();
-        
         // Door方向チェック
         this.CheckDoorDirection();
     }
@@ -52,19 +63,19 @@ public class NextMapGenerateController : MonoBehaviour
     /// </summary>
     private void CheckDoorDirection()
     {
-        if(this.mapInfo.HasNorthDoor)
+        if (this.mapInfo.HasNorthDoor)
             // Door方向にMapがあるかを判定
             this.CheckSpawnedMapOnNextPos(0);
-        
-        if(this.mapInfo.HasEastDoor)
+
+        if (this.mapInfo.HasEastDoor)
             // Door方向にMapがあるかを判定
             this.CheckSpawnedMapOnNextPos(1);
-    
-        if(this.mapInfo.HasSouthDoor)
+
+        if (this.mapInfo.HasSouthDoor)
             // Door方向にMapがあるかを判定
             this.CheckSpawnedMapOnNextPos(2);
-        
-        if(this.mapInfo.HasWestDoor)
+
+        if (this.mapInfo.HasWestDoor)
             // Door方向にMapがあるかを判定
             this.CheckSpawnedMapOnNextPos(3);
     }
@@ -76,7 +87,7 @@ public class NextMapGenerateController : MonoBehaviour
     private void CheckSpawnedMapOnNextPos(int doorDirection)
     {
         // 次のMap座標
-        var nextMapPos = 
+        var nextMapPos =
             GridManager.Instance.NextGridPos(this.transform.position, doorDirection);
 
         // 次のMap座標にすでにMapがある場合
@@ -97,14 +108,79 @@ public class NextMapGenerateController : MonoBehaviour
                         // West方向にMap有無チェック
                         this.CheckSpawnedMapOnFuturePos(nextMapPos, 3, () =>
                         {
-                            // 次のMap生成
-                            this.GenerateNextMap(nextMapPos, 
-                                // Doorパターンナンバー
-                                this.SetDoorDirectionNum(this.hasNorthDoor, this.hasEastDoor, this.hasSouthDoor, this.hasWestDoor));
+                            this.SetNewMapList(() => { this.GenerateNextMap(nextMapPos); });
                         });
                     });
                 });
             });
+        }
+        
+    }
+
+    private void SetNewMapList(Action onFinished)
+    {
+        foreach (var map in MapGeneratingManager.Instance.MapList.Where(map => map.name.IndexOf(mustHaveDoorDirection[0]) > 0))
+        {
+            if (mustHaveDoorDirection.Count > 1)
+            {
+                if (map.name.IndexOf(mustHaveDoorDirection[1]) > 0)
+                {
+                    if (mustHaveDoorDirection.Count > 2)
+                    {
+                        if (map.name.IndexOf(mustHaveDoorDirection[2]) > 0)
+                        {
+                            if (mustHaveDoorDirection.Count == 4)
+                            {
+                                if (map.name.IndexOf(mustHaveDoorDirection[3]) > 0)
+                                {
+                                    this.generatingQueueList.Add(map);
+                                }
+                            }
+                            else
+                                this.generatingQueueList.Add(map);
+                        }
+                    }
+                    else
+                        this.generatingQueueList.Add(map);
+                }
+            }
+            else
+                this.generatingQueueList.Add(map);
+        }
+
+        for (int num = 0; num < neverHaveDoorDirection.Count; num++)
+        {
+            foreach (GameObject map
+                     in MapGeneratingManager.Instance.MapList.ToArray().Where(a =>
+                         a.name.IndexOf(neverHaveDoorDirection[num], StringComparison.Ordinal) > 0))
+            {
+                if (!this.removingQueueList.Contains(map))
+                    this.removingQueueList.Add(map);
+            }
+        }
+        
+        foreach (GameObject map in this.removingQueueList)
+        {
+            if (this.generatingQueueList.Contains(map))
+            {
+                this.generatingQueueList.Remove(map);
+                Debug.LogFormat($"Remove this map from list::: {map} ::: ", DColor.cyan);
+            }
+        }
+
+        onFinished?.Invoke();
+    }
+
+    private void addMap(Action onFinished)
+    {
+        foreach (GameObject map
+                 in MapGeneratingManager.Instance.MapList.ToArray()
+                     .Where(a => a.name.IndexOf(mustHaveDoorDirection[0], StringComparison.Ordinal) > 0))
+        {
+            if (!this.tempQueueList.Contains(map))
+            {
+                this.tempQueueList.Add(map);
+            }
         }
     }
 
@@ -118,7 +194,7 @@ public class NextMapGenerateController : MonoBehaviour
     {
         // その次のMap座標
         var futureMapPos = GridManager.Instance.NextGridPos(nextPos, doorDirection);
-        
+
         // 次のMap座標にすでにMapがある場合
         var isFutureMapExist = MapCollector.Instance.CheckMapPosWithList(futureMapPos);
         if (isFutureMapExist)
@@ -129,19 +205,27 @@ public class NextMapGenerateController : MonoBehaviour
             {
                 case 0:
                     if (existMapInfo.HasSouthDoor)
-                        this.hasNorthDoor = true;
+                        this.SetDoorCondition(this.hasNorthDoor = true, this.doesNorthDoorNotMatter = false, 0);
+                    else
+                        this.SetDoorCondition(this.hasNorthDoor = false, this.doesNorthDoorNotMatter = false, 0);
                     break;
                 case 1:
                     if (existMapInfo.HasWestDoor)
-                        this.hasEastDoor = true;
+                        this.SetDoorCondition(this.hasEastDoor = true, this.doesEastDoorNotMatter = false, 1);
+                    else
+                        this.SetDoorCondition(this.hasEastDoor = false, this.doesEastDoorNotMatter = false, 1);
                     break;
                 case 2:
                     if (existMapInfo.HasNorthDoor)
-                        this.hasSouthDoor = true;
+                        this.SetDoorCondition(this.hasSouthDoor = true, this.doesSouthDoorNotMatter = false, 2);
+                    else
+                        this.SetDoorCondition(this.hasSouthDoor = false, this.doesSouthDoorNotMatter = false, 2);
                     break;
                 case 3:
                     if (existMapInfo.HasEastDoor)
-                        this.hasWestDoor = true;
+                        this.SetDoorCondition(this.hasWestDoor = true, this.doesWestDoorNotMatter = false, 3);
+                    else
+                        this.SetDoorCondition(this.hasWestDoor = false, this.doesWestDoorNotMatter = false, 3);
                     break;
             }
         }
@@ -151,127 +235,74 @@ public class NextMapGenerateController : MonoBehaviour
             switch (doorDirection)
             {
                 case 0:
-                    this.hasNorthDoor = false;
+                    this.SetDoorCondition(this.hasNorthDoor = false, this.doesNorthDoorNotMatter = true, 0);
                     break;
                 case 1:
-                    this.hasEastDoor = false;
+                    this.SetDoorCondition(this.hasEastDoor = false, this.doesEastDoorNotMatter = true, 1);
                     break;
                 case 2:
-                    this.hasSouthDoor = false;
+                    this.SetDoorCondition(this.hasSouthDoor = false, this.doesSouthDoorNotMatter = true, 2);
                     break;
                 case 3:
-                    this.hasWestDoor = false;
+                    this.SetDoorCondition(this.hasWestDoor = false, this.doesWestDoorNotMatter = true, 3);
                     break;
             }
         }
 
-        
-        Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count + 1} :::");
-        Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count + 1} ::: futureMapPos = {futureMapPos}");
-        Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count + 1} ::: N = {this.hasNorthDoor} ::: E = {this.hasEastDoor}" +
-                        $" ::: S = {this.hasSouthDoor} ::: W = {this.hasWestDoor}");
-        Debug.LogFormat($" ");
-        
         onFinished?.Invoke();
     }
 
-    /// <summary>
-    /// Doorパータンナンバー
-    /// </summary>
-    /// <param name="north"></param>
-    /// <param name="east"></param>
-    /// <param name="south"></param>
-    /// <param name="west"></param>
-    /// <returns></returns>
-    private int SetDoorDirectionNum(bool north, bool east, bool south, bool west)
+    private void SetDoorCondition(bool hasThatDoor, bool thatDoorDoesntMatter, int doorDirection)
     {
-        if (north)
+        var doorString = "";
+        switch (doorDirection)
         {
-            return east ? south ? west ? 1 : 2 : west ? 3 : 4 : south ? west ? 5 : 6 : west ? 7 : 8;
+            case 0:
+                doorString = "N";
+                break;
+            case 1:
+                doorString = "E";
+                break;
+            case 2:
+                doorString = "S";
+                break;
+            case 3:
+                doorString = "W";
+                break;
         }
+
+        if (hasThatDoor)
+        {
+            Debug.LogFormat($"It must have this ::: {doorString} ::: ", DColor.green);
+            
+            this.mustHaveDoorDirection.Add(doorString);
+        }
+
         else
         {
-            return east ? south ? west ? 9 : 10 : west ? 11 : 12 : south ? west ? 13 : 14 : west ? 15 : 16;
+            if (thatDoorDoesntMatter) return;
+            
+            Debug.LogFormat($"It must not have this ::: {doorString} ::: ", DColor.yellow);
+
+            this.neverHaveDoorDirection.Add(doorString);
         }
-    } 
+    }
 
     /// <summary>
     /// 次のMapを生成
     /// </summary>
     /// <param name="nextMapPos"></param>
     /// <param name="doorDirectionNum"></param>
-    private void GenerateNextMap(Vector2 nextMapPos, int doorDirectionNum)
+    private void GenerateNextMap(Vector2 nextMapPos)
     {
-        var randomNum = 0;
-        var creatTarget = MapGeneratingManager.Instance.MapStart[randomNum];
-        switch (doorDirectionNum)
+        var randomNum = UnityEngine.Random.Range(0, this.generatingQueueList.Count);
+        var creatTarget = this.generatingQueueList[randomNum];
+
+        foreach (GameObject map in this.generatingQueueList)
         {
-            case 1:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeNESW.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeNESW[randomNum];
-                break;
-            case 2:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeNES.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeNES[randomNum];
-                break;
-            case 3:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeNEW.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeNEW[randomNum];
-                break;
-            case 4:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeNE.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeNE[randomNum];
-                break;
-            case 5:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeNSW.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeNSW[randomNum];
-                break;
-            case 6:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeNS.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeNS[randomNum];
-                break;
-            case 7:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeNW.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeNW[randomNum];
-                break;
-            case 8:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeN.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeN[randomNum];
-                break;
-            case 9:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeESW.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeESW[randomNum];
-                break;
-            case 10:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeES.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeES[randomNum];
-                break;
-            case 11:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeEW.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeEW[randomNum];
-                break;
-            case 12:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeE.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeE[randomNum];
-                break;
-            case 13:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeSW.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeSW[randomNum];
-                break;
-            case 14:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeS.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeS[randomNum];
-                break;
-            case 15:
-                randomNum = UnityEngine.Random.Range(0, MapGeneratingManager.Instance.MapTypeW.Count);
-                creatTarget = MapGeneratingManager.Instance.MapTypeW[randomNum];
-                break;
-            case 16:
-                Debug.LogFormat("Error ::: There is No Map can be spawned", DColor.red);
-                break;
+            Debug.LogFormat($" ::::::::::::::::::::::::::::::::::::::: {map.name}");
         }
-
-
+        
         if (MapGeneratingManager.Instance.MaxTotalMapCollectNum > MapCollector.Instance.currentTotalMapCollectNum)
         {
             // 生成
@@ -280,18 +311,21 @@ public class NextMapGenerateController : MonoBehaviour
             // リストに追加
             MapCollector.Instance.AddMapToList(instancedMap);
             MapCollector.Instance.currentTotalMapCollectNum += this.mapInfo.MapCollectNum;
+
+            this.generatingQueueList.Clear();
+            this.removingQueueList.Clear();
+            this.mustHaveDoorDirection.Clear();
+            this.neverHaveDoorDirection.Clear();
             
-            Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count} :::", DColor.cyan);
-            Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count} ::: nextMapPos = {nextMapPos}", DColor.cyan);
-            Debug.LogFormat($" ::: {MapCollector.Instance.collectedMapList.Count} ::: doorDirectionNum = {doorDirectionNum}", DColor.cyan);
-            Debug.LogFormat($" ");
+            Debug.LogFormat($" :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: " +
+                            $"{MapCollector.Instance.collectedMapList.Count} + {instancedMap.name}", DColor.yellow);
         }
         else
         {
             Debug.LogFormat("Map Generating is Done", DColor.cyan);
             return;
         }
-        
     }
-    #endregion
+
+#endregion
 }
