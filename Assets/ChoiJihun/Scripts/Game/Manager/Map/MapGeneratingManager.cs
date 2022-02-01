@@ -75,7 +75,7 @@ public class MapGeneratingManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 自動生成開始
+    /// 自動生成開始：一つ目のマップを生成
     /// </summary>
     public void StartGenerating(Action onFinished = null)
     {
