@@ -63,6 +63,9 @@ MonoBehaviour:
   hasSouthDoor: 1
   hasWestDoor: 1
   mapCollectNum: 3
+  mapDoorCount: 3
+  mapLeftDoorCount: 3
+  haveMapDoneGenerating: 0
 --- !u!114 &4643650392827055867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,8 +79,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapInfo: {fileID: 8061957851657095138}
-  generatingQueList: []
-  removeMapList: []
 --- !u!1 &4166231903353486862
 GameObject:
   m_ObjectHideFlags: 0

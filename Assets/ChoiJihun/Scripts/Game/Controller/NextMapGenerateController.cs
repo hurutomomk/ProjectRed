@@ -47,6 +47,10 @@ public class NextMapGenerateController : MonoBehaviour
     /// 生成対象にならないマップを保存するリスト
     /// </summary>
     private List<GameObject> removingQueueList = new List<GameObject>();
+    /// <summary>
+    /// マップ生成終了ステータスを表す番号
+    /// </summary>
+    private int mapGeneratingStatusNum = 0;
     #endregion
 
     #endregion
@@ -59,6 +63,9 @@ public class NextMapGenerateController : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        // マップ生成終了ステータス番号を初期更新
+        this.mapGeneratingStatusNum = this.mapInfo.MapLeftDoorCount;
+        
         // Door方向チェック
         this.CheckDoorDirection();
     }
@@ -97,7 +104,12 @@ public class NextMapGenerateController : MonoBehaviour
 
         // 次のMap座標にすでにMapがある場合
         if (MapCollector.Instance.CheckMapPosWithList(nextMapPos))
-            return;
+        {
+            // マップ生成のステータスを更新
+            this.UpdateMapGeneratingStatus();
+            // マップを生成すべきドア方向のステータスを更新
+            this.UpdateMapDoorStatus(doorDirection);
+        }
         // 次のMap座標にすでにMapがない場合
         else
         {
@@ -113,8 +125,8 @@ public class NextMapGenerateController : MonoBehaviour
                         // West方向にMap有無チェック
                         this.CheckSpawnedMapOnFuturePos(nextMapPos, 3, () =>
                         {
-                            // 
-                            this.SetNewList(() => { this.GenerateNextMap(nextMapPos); });
+                            // 生成対象のリスト作成後、そのリストの候補でマップを生成
+                            this.SetNewList(() => { this.GenerateNextMap(nextMapPos, doorDirection); });
                         });
                     });
                 });
@@ -292,7 +304,7 @@ public class NextMapGenerateController : MonoBehaviour
     /// </summary>
     /// <param name="nextMapPos"></param>
     /// <param name="doorDirectionNum"></param>
-    private void GenerateNextMap(Vector2 nextMapPos)
+    private void GenerateNextMap(Vector2 nextMapPos, int doorDirection)
     {
         // Random Number
         var randomNum = UnityEngine.Random.Range(0, this.generatingQueueList.Count);
@@ -315,7 +327,11 @@ public class NextMapGenerateController : MonoBehaviour
                 Debug.LogFormat("Map Generating is Done", DColor.cyan);
                 
             // リスト初期化
-            InitListsAndVariables();
+            this.InitListsAndVariables();
+            // マップ生成のステータスを更新
+            this.UpdateMapGeneratingStatus();
+            // マップを生成すべきドア方向のステータスを更新
+            this.UpdateMapDoorStatus(doorDirection);
         }
     }
 
@@ -340,5 +356,47 @@ public class NextMapGenerateController : MonoBehaviour
         this.doesWestDoorNotMatter = false;
     }
 
-#endregion
+    /// <summary>
+    /// マップ生成のステータスを更新
+    /// </summary>
+    private void UpdateMapGeneratingStatus()
+    {
+        // ステータス番号増加
+        this.mapGeneratingStatusNum -= 1;
+        // マップを生成すべきドアの数を更新
+        this.mapInfo.SetLeftDoorCountDown();
+        
+        // ステータス番号が４になった場合
+        if (this.mapGeneratingStatusNum <= 0)
+        {
+            // MapInfoに記録
+            this.mapInfo.SetGeneratingDone();
+        }
+    }
+
+    /// <summary>
+    /// マップ生成未完了個所の再生成のため、マップを生成すべきドア方向のステータスを更新
+    /// </summary>
+    private void UpdateMapDoorStatus(int doorDirection)
+    {
+        switch (doorDirection)
+        {
+            case 0:
+                this.mapInfo.SetNorthDoorStatusFalse();
+                break;
+            case 1:
+                this.mapInfo.SetEastDoorStatusFalse();
+                break;
+            case 2:
+                this.mapInfo.SetSouthDoorStatusFalse();
+                break;
+            case 3: 
+                this.mapInfo.SetWestDoorStatusFalse();
+                break;
+        }
+    }
+    
+    
+
+    #endregion
 }

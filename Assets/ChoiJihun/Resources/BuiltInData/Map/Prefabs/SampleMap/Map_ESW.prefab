@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 323924206049038813}
   - component: {fileID: 3165630071130691780}
   m_Layer: 0
-  m_Name: SampleMap_ESW_3
+  m_Name: Map_ESW
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,6 +63,9 @@ MonoBehaviour:
   hasSouthDoor: 1
   hasWestDoor: 1
   mapCollectNum: 3
+  mapDoorCount: 3
+  mapLeftDoorCount: 3
+  haveMapDoneGenerating: 0
 --- !u!114 &3165630071130691780
 MonoBehaviour:
   m_ObjectHideFlags: 0
