@@ -91,4 +91,5 @@ public class MapGeneratingManager : MonoBehaviour
         onFinished?.Invoke();
     }
     #endregion
+    
 }

@@ -16236,7 +16236,7 @@ GameObject:
   - component: {fileID: 3021195424662561460}
   - component: {fileID: 467580124077894573}
   m_Layer: 0
-  m_Name: SampleMap_NES_3
+  m_Name: Map_NES
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16286,6 +16286,9 @@ MonoBehaviour:
   hasSouthDoor: 1
   hasWestDoor: 0
   mapCollectNum: 3
+  mapDoorCount: 3
+  mapLeftDoorCount: 3
+  haveMapDoneGenerating: 0
 --- !u!114 &467580124077894573
 MonoBehaviour:
   m_ObjectHideFlags: 0

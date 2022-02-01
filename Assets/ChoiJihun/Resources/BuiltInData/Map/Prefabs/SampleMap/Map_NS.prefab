@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3062316569398310619}
   - component: {fileID: 427793790224924610}
   m_Layer: 0
-  m_Name: SampleMap_NS_2
+  m_Name: Map_NS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,6 +63,9 @@ MonoBehaviour:
   hasSouthDoor: 1
   hasWestDoor: 0
   mapCollectNum: 2
+  mapDoorCount: 2
+  mapLeftDoorCount: 2
+  haveMapDoneGenerating: 0
 --- !u!114 &427793790224924610
 MonoBehaviour:
   m_ObjectHideFlags: 0

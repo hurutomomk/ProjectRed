@@ -232,7 +232,7 @@ MonoBehaviour:
   - {fileID: 8268786760265823086, guid: 706e07446c12ede48817185d3d4cf2af, type: 3}
   - {fileID: 2503222233678151525, guid: 33799f614f343794c8d4bee2ecb552f4, type: 3}
   mapRoot: {fileID: 2060151945}
-  maxTotalMapCollectNum: 100
+  maxTotalMapCollectNum: 200
 --- !u!4 &748805230
 Transform:
   m_ObjectHideFlags: 0
