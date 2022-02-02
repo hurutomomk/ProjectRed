@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
         // 開始
         this.mapGeneratingManager.StartGenerating(() =>
         {
-            
+            this.mapGeneratingManager.WaitForMapGeneratingFinishAsync();
         });
     }
 

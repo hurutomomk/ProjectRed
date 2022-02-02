@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Collections.Concurrent;
 
 public class NextMapGenerateController : MonoBehaviour
 {
@@ -42,11 +43,15 @@ public class NextMapGenerateController : MonoBehaviour
     /// <summary>
     /// ドアのコンディションによって篩にかけられたマップを保存するリスト
     /// </summary>
-    private List<GameObject> generatingQueueList = new List<GameObject>();
+    public List<GameObject> generatingQueueList = new List<GameObject>();
     /// <summary>
     /// 生成対象にならないマップを保存するリスト
     /// </summary>
     private List<GameObject> removingQueueList = new List<GameObject>();
+    /// <summary>
+    /// 生成終了シーケンスに必要ないマップを保存するリスト
+    /// </summary>
+    public List<GameObject> addictionalRemovableMapList = new List<GameObject>();
     /// <summary>
     /// マップ生成終了ステータスを表す番号
     /// </summary>
@@ -306,26 +311,58 @@ public class NextMapGenerateController : MonoBehaviour
     /// <param name="doorDirectionNum"></param>
     private void GenerateNextMap(Vector2 nextMapPos, int doorDirection)
     {
-        // Random Number
-        var randomNum = UnityEngine.Random.Range(0, this.generatingQueueList.Count);
-        // マップリストからランダムで生成ターゲットを選抜
-        var creatTarget = this.generatingQueueList[randomNum];
         // currentTotalMapCollectNum　が　MaxTotalMapCollectNum　を超えない範囲でマップを生成
         if (MapGeneratingManager.Instance.MaxTotalMapCollectNum > MapCollector.Instance.currentTotalMapCollectNum)
         {
+            // Random Number
+            var randomNum = UnityEngine.Random.Range(0, this.generatingQueueList.Count);
+            // マップリストからランダムで生成ターゲットを選抜
+            var creatTarget = this.generatingQueueList[randomNum];
             // 生成
             var instancedMap = Instantiate(creatTarget, MapGeneratingManager.Instance.mapRoot);
             // 座標決め
             instancedMap.transform.position = nextMapPos;
             // 生成されたマップを管理するリストに追加
             MapCollector.Instance.AddMapToList(instancedMap);
+        
             // マップ情報に生成順の番号を記録
             MapCollector.Instance.currentTotalMapCollectNum += this.mapInfo.MapCollectNum;
-
-            // 生成直後、currentTotalMapCollectNum　が　MaxTotalMapCollectNum　を超えた場合
-            if (MapGeneratingManager.Instance.MaxTotalMapCollectNum <= MapCollector.Instance.currentTotalMapCollectNum)
-                Debug.LogFormat("Map Generating is Done", DColor.cyan);
-                
+            
+            // リスト初期化
+            this.InitListsAndVariables();
+            // マップ生成のステータスを更新
+            this.UpdateMapGeneratingStatus();
+            // マップを生成すべきドア方向のステータスを更新
+            this.UpdateMapDoorStatus(doorDirection);
+        }
+        else
+        {
+            // 生成待ちマップリストの中から生成終了シーケンスに必要ないマップをリストアップ
+            foreach (var map in this.generatingQueueList)
+            {
+                if (map.transform.name.Length > this.mustHaveDoorDirection.Count + 4)
+                    this.addictionalRemovableMapList.Add(map);
+            }
+            
+            // リストアップした項目と生成待ちマップリストで重複するマップをリストから排除
+            foreach (var map in this.addictionalRemovableMapList)
+            {
+                if (this.generatingQueueList.Contains(map))
+                    this.generatingQueueList.Remove(map);
+            }
+            
+            // 生成ターゲット（リストに1つのみに残っている状態なので指定番号は０）
+            var creatTarget = this.generatingQueueList[0];
+            // 生成
+            var instancedMap = Instantiate(creatTarget, MapGeneratingManager.Instance.mapRoot);
+            // 座標決め
+            instancedMap.transform.position = nextMapPos;
+            // 生成されたマップを管理するリストに追加
+            MapCollector.Instance.AddMapToList(instancedMap);
+        
+            // マップ情報に生成順の番号を記録
+            MapCollector.Instance.currentTotalMapCollectNum += this.mapInfo.MapCollectNum;
+            
             // リスト初期化
             this.InitListsAndVariables();
             // マップ生成のステータスを更新
@@ -336,7 +373,7 @@ public class NextMapGenerateController : MonoBehaviour
     }
 
     /// <summary>
-    /// マップ生成後、リストを初期化
+    /// マップ生成後、各種データを初期化
     /// </summary>
     private void InitListsAndVariables()
     {
@@ -344,6 +381,7 @@ public class NextMapGenerateController : MonoBehaviour
         this.removingQueueList.Clear();
         this.mustHaveDoorDirection.Clear();
         this.neverHaveDoorDirection.Clear();
+        this.addictionalRemovableMapList.Clear();
         
         this.hasNorthDoor = false;
         this.hasEastDoor = false;
@@ -371,6 +409,8 @@ public class NextMapGenerateController : MonoBehaviour
         {
             // MapInfoに記録
             this.mapInfo.SetGeneratingDone();
+            // MapGeneratingManagerに記録
+            MapGeneratingManager.Instance.AddAllDoorClosedMapCount();
         }
     }
 
@@ -395,8 +435,5 @@ public class NextMapGenerateController : MonoBehaviour
                 break;
         }
     }
-    
-    
-
     #endregion
 }

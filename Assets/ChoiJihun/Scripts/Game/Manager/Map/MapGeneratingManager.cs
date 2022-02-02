@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
@@ -27,8 +28,7 @@ public class MapGeneratingManager : MonoBehaviour
     public List<GameObject> MapList
     {
         get => mapList;
-    } 
-    
+    }
     #endregion
     
     #region [04. trasform]
@@ -50,18 +50,26 @@ public class MapGeneratingManager : MonoBehaviour
         get => maxTotalMapCollectNum;
     }
     #endregion
+
+    #region [06. coroutine]
+    /// <summary>
+    /// コルーチン
+    /// </summary>
+    private Coroutine coroutine;
+    /// <summary>
+    /// ドア数が０になったマップの数
+    /// </summary>
+    private int allDoorClosedMapCount = 0;
+    /// <summary>
+    /// マップ生成状態トリガー
+    /// </summary>
+    private bool isMapGeneratingFinished = false;
+    #endregion
     
     #endregion
 
     
     #region [func]
-    /// <summary>
-    /// コンストラクタ
-    /// </summary>
-    private void Awake()
-    {
-        
-    }
 
     /// <summary>
     /// コンストラクタ
@@ -79,17 +87,84 @@ public class MapGeneratingManager : MonoBehaviour
     /// </summary>
     public void StartGenerating(Action onFinished = null)
     {
-        Debug.LogFormat("MapGenerating Started", DColor.cyan);
-
-        var randomNum = UnityEngine.Random.Range(0, 15);
+        Debug.LogFormat("Map Generating Started", DColor.cyan);
         
         // 生成
+        var randomNum = UnityEngine.Random.Range(0, this.mapList.Count);
         var instancedMap = Instantiate(this.mapList[randomNum], this.mapRoot);
         // リストに追加
         MapCollector.Instance.AddMapToList(instancedMap);
         
         onFinished?.Invoke();
     }
-    #endregion
+
+    /// <summary>
+    /// 個々のNextMapGenerateControllerが生成を終了した場合、カウントアップ
+    /// </summary>
+    public void AddAllDoorClosedMapCount()
+    {
+        this.allDoorClosedMapCount++;
+    }
     
+    /// <summary>
+    /// マップ生成終了判定のコルーチン開始準備
+    /// </summary>
+    public void WaitForMapGeneratingFinishAsync()
+    {
+        // 初期化
+        if (this.coroutine != null)
+        {
+            StopCoroutine(this.coroutine);
+        }
+
+        // コルーチンスタート
+        this.coroutine = StartCoroutine(this.WaitForFinishGenerating());
+    }
+
+    /// <summary>
+    /// マップ生成終了を判定
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator WaitForFinishGenerating()
+    {
+        while (!this.isMapGeneratingFinished)
+        {
+            if (this.allDoorClosedMapCount == MapCollector.Instance.collectedMapList.Count)
+            {
+                // トリガーオフ
+                this.isMapGeneratingFinished = true;
+                
+                if (MapCollector.Instance.currentTotalMapCollectNum < maxTotalMapCollectNum)
+                    // マップ生成データリセット
+                    this.ResetMapGeneratingData();
+                else
+                    // マップ生成シーケンス終了、次のシーケンスに移行
+                    this.MoveToNextSequence();
+            }
+            
+            yield return null;
+        }
+    }
+    
+    /// <summary>
+    /// 次のシーケンスに移行
+    /// </summary>
+    private void MoveToNextSequence()
+    {
+        Debug.LogFormat("Map Generating Has Done", DColor.cyan);
+
+        // TODO:　データリセット、後マップ生成再開
+    }
+
+    /// <summary>
+    /// マップ生成データリセット
+    /// </summary>
+    private void ResetMapGeneratingData()
+    {
+        Debug.LogFormat("Reset Map Generating Data ", DColor.cyan);
+        
+        // TODO:　次のシーケンス開始
+    }
+    
+    #endregion
 }
