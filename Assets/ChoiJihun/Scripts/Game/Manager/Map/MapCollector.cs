@@ -97,11 +97,22 @@ public class MapCollector : MonoBehaviour
     }
 
     /// <summary>
-    /// 保存したTempMatchedMapをnullに変更
+    /// データ初期化
     /// </summary>
-    public void DeleteSavedTempMatchedMap()
+    public void ResetData()
     {
+        // 臨時保存用のGameOcject
         this.tempMatchedMap = null;
+        // 現在のMapCollectNum
+        this.currentTotalMapCollectNum = 0;
+        // 生成済みマップの破棄
+        for (int num = 0; num < this.collectedMapList.Count; num++)
+        {
+            var targetMap = this.collectedMapList[num];
+            Destroy(targetMap);
+        }
+        // リスト 
+        this.collectedMapList.Clear();
     }
 
     #endregion

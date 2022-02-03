@@ -68,6 +68,9 @@ public class NextMapGenerateController : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        // データ初期化
+        this.InitListsAndVariables();
+        
         // マップ生成終了ステータス番号を初期更新
         this.mapGeneratingStatusNum = this.mapInfo.MapLeftDoorCount;
         
