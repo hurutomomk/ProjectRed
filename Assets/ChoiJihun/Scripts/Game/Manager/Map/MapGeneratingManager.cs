@@ -134,7 +134,7 @@ public class MapGeneratingManager : MonoBehaviour
                 // トリガーオフ
                 this.isMapGeneratingFinished = true;
                 
-                if (MapCollector.Instance.currentTotalMapCollectNum < maxTotalMapCollectNum)
+                if (MapCollector.Instance.CurrentTotalMapCollectNum < maxTotalMapCollectNum)
                     // マップ生成データリセット
                     this.ResetMapGeneratingData();
                 else
@@ -163,8 +163,40 @@ public class MapGeneratingManager : MonoBehaviour
     {
         Debug.LogFormat("Reset Map Generating Data ", DColor.cyan);
         
-        // TODO:　次のシーケンス開始
+        // コルーチン関連データの初期化
+        if (this.coroutine != null)
+        {
+            StopCoroutine(this.coroutine);
+        }
+        this.allDoorClosedMapCount = 0;
+        this.isMapGeneratingFinished = false;
+        
+        // MapCollectorのデータをリセット
+        MapCollector.Instance.ResetData();
+
+        Debug.LogFormat("Reset Done ", DColor.cyan);
+        // マップ生成再開
+        this.RestartMapGenerating();
     }
-    
+
+    /// <summary>
+    /// マップ生成を再開
+    /// </summary>
+    private void RestartMapGenerating()
+    {
+        this.StartGenerating(this.WaitForMapGeneratingFinishAsync);
+    }
+
+    // /// <summary>
+    // /// マップ生成再開のデバッグ用　　　＊＊＊＊＊　注：使用しないときはコメントアウトすること　＊＊＊＊＊
+    // /// </summary>
+    // private void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.F4))
+    //     {
+    //         this.ResetMapGeneratingData();
+    //     }
+    // }
+
     #endregion
 }
