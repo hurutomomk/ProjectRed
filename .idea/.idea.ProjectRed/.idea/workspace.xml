@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="97076389-5cdf-4f7d-9f0f-7f7ecac19b1a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectRed/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectRed/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Manager/Map/MapCollector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Manager/Map/MapCollector.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Manager/Map/MapGeneratingManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ChoiJihun/Scripts/Game/Manager/Map/MapGeneratingManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,6 +92,11 @@
       <workItem from="1643850893638" duration="2034000" />
       <workItem from="1643852961842" duration="9000" />
       <workItem from="1643852979652" duration="1622000" />
+      <workItem from="1643889244550" duration="1654000" />
+      <workItem from="1643978726299" duration="784000" />
+      <workItem from="1644074234963" duration="596000" />
+      <workItem from="1644106624751" duration="596000" />
+      <workItem from="1644235158226" duration="595000" />
     </task>
     <servers />
   </component>
