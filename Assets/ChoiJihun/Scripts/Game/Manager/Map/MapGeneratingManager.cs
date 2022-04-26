@@ -53,10 +53,6 @@ public class MapGeneratingManager : MonoBehaviour
 
     #region [06. coroutine]
     /// <summary>
-    /// コルーチン
-    /// </summary>
-    private Coroutine coroutine;
-    /// <summary>
     /// ドア数が０になったマップの数
     /// </summary>
     private int allDoorClosedMapCount = 0;
@@ -111,14 +107,8 @@ public class MapGeneratingManager : MonoBehaviour
     /// </summary>
     public void WaitForMapGeneratingFinishAsync()
     {
-        // 初期化
-        if (this.coroutine != null)
-        {
-            StopCoroutine(this.coroutine);
-        }
-
         // コルーチンスタート
-        this.coroutine = StartCoroutine(this.WaitForFinishGenerating());
+        GlobalCoroutine.Play(this.WaitForFinishGenerating(), "CheckMapGeneratingFinished", null);
     }
 
     /// <summary>
@@ -145,6 +135,8 @@ public class MapGeneratingManager : MonoBehaviour
             yield return null;
         }
     }
+
+    private Action onFinishedMapGenerating;
     
     /// <summary>
     /// 次のシーケンスに移行
@@ -153,7 +145,21 @@ public class MapGeneratingManager : MonoBehaviour
     {
         Debug.LogFormat("Map Generating Has Done", DColor.cyan);
 
-        // TODO:　データリセット、後マップ生成再開
+        GlobalCoroutine.Stop("CheckMapGeneratingFinished");
+        this.allDoorClosedMapCount = 0;
+        this.isMapGeneratingFinished = false;
+        
+        // マップ生成終了コールバック
+        this.onFinishedMapGenerating?.Invoke();
+    }
+
+    /// <summary>
+    /// マップ生成終了コールバック
+    /// </summary>
+    /// <param name="onCompleted"></param>
+    public void MapGeneratingFinished(Action onCompleted)
+    {
+        this.onFinishedMapGenerating = onCompleted;
     }
 
     /// <summary>
@@ -164,10 +170,7 @@ public class MapGeneratingManager : MonoBehaviour
         Debug.LogFormat("Reset Map Generating Data ", DColor.cyan);
         
         // コルーチン関連データの初期化
-        if (this.coroutine != null)
-        {
-            StopCoroutine(this.coroutine);
-        }
+        GlobalCoroutine.Stop("CheckMapGeneratingFinished");
         this.allDoorClosedMapCount = 0;
         this.isMapGeneratingFinished = false;
         
