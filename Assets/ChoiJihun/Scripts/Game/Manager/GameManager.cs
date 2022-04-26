@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
 
     #region [func]
 
+    #region [00. コンストラクタ]
     /// <summary>
     /// コンストラクタ
     /// </summary>
@@ -55,7 +56,8 @@ public class GameManager : MonoBehaviour
         // マップ自動生成シーケンス
         this.MapGeneratingSequence();
     }
-
+    #endregion
+    
     #region [01. Map Generating Sequence]
     /// <summary>
     /// マップ自動生成シーケンス
@@ -72,7 +74,7 @@ public class GameManager : MonoBehaviour
 
     #region [02. Next Sequence]
     /// <summary>
-    /// 
+    /// TODO :: デバッグ（後にシーケンス内容を変更）
     /// </summary>
     private void NextSequence()
     {
