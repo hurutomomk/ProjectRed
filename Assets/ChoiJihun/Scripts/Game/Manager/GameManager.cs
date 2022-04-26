@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private MapGeneratingManager mapGeneratingManager;
 
+    [SerializeField]
+    private PlayerMovementController playerMovementController;
+
     #endregion
 
     #endregion
@@ -54,20 +57,29 @@ public class GameManager : MonoBehaviour
     }
 
     #region [01. Map Generating Sequence]
-
     /// <summary>
     /// マップ自動生成シーケンス
     /// </summary>
     private void MapGeneratingSequence()
     {
         // 開始
-        this.mapGeneratingManager.StartGenerating(() =>
-        {
-            this.mapGeneratingManager.WaitForMapGeneratingFinishAsync();
-        });
+        this.mapGeneratingManager.StartGenerating(this.mapGeneratingManager.WaitForMapGeneratingFinishAsync);
+        
+        // 終了
+        this.mapGeneratingManager.MapGeneratingFinished(this.NextSequence);
     }
-
     #endregion
 
+    #region [02. Next Sequence]
+    /// <summary>
+    /// 
+    /// </summary>
+    private void NextSequence()
+    {
+        this.playerMovementController.ActivePlayerMovement();
+    } 
+
+    #endregion
+    
     #endregion
 }
