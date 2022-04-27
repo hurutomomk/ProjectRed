@@ -1,21 +1,17 @@
 using System.Collections;
 using UnityEngine;
 
-public enum PlayerMovementState
-{
-    Walking = 0,
-    Sneaking = 1,
-    Running = 2
-}
+
 
 public class PlayerMovementController : MonoBehaviour
 {
     #region [var]
 
     #region [01. ボタン押下判定関連]
+    // PlayerMovementState
     [SerializeField]
-    private PlayerMovementState playerMovementState;
-    
+    private PlayerStateManager.PlayerMovementState movementState;
+     
     /// <summary>
     /// 移動スピード
     /// </summary>
@@ -45,8 +41,12 @@ public class PlayerMovementController : MonoBehaviour
     /// </summary>
     public void ActivePlayerMovement()
     {
+        // 移動速度初期化
         this.moveSpeed = walkingSpeed;
-        this.playerMovementState = PlayerMovementState.Walking;
+        // PlayerMovementStateをセット
+        PlayerStateManager.SetPlayerMovementState(PlayerStateManager.PlayerMovementState.Walking);
+        // 現在のPlayerMovementState表示を更新
+        this.movementState = PlayerStateManager.MovementState;
         
         // Pointer座標初期化
         this.pointer.position = this.transform.position;
@@ -136,26 +136,29 @@ public class PlayerMovementController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.LeftShift))
             {
                 this.moveSpeed = runningSpeed;
-                this.playerMovementState = PlayerMovementState.Running;
+                PlayerStateManager.SetPlayerMovementState(PlayerStateManager.PlayerMovementState.Running);
             }
             if(Input.GetKeyUp(KeyCode.LeftShift))
             {
                 this.moveSpeed = walkingSpeed;
-                this.playerMovementState = PlayerMovementState.Walking;
+                PlayerStateManager.SetPlayerMovementState(PlayerStateManager.PlayerMovementState.Walking);
             }
                 
             // Sneaking
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {
                 this.moveSpeed = sneakingSpeed;
-                this.playerMovementState = PlayerMovementState.Sneaking;
+                PlayerStateManager.SetPlayerMovementState(PlayerStateManager.PlayerMovementState.Sneaking);
             }
             if(Input.GetKeyUp(KeyCode.LeftControl))
             {
                 this.moveSpeed = walkingSpeed;
-                this.playerMovementState = PlayerMovementState.Walking;
+                PlayerStateManager.SetPlayerMovementState(PlayerStateManager.PlayerMovementState.Walking);
             }
 
+            // 更新
+            this.movementState = PlayerStateManager.MovementState;
+            
             yield return new WaitForFixedUpdate();
         }
     }
