@@ -5,7 +5,7 @@ public static class PlayerStateManager
 
     #region [var]
     /// <summary>
-    /// 
+    /// プレイヤーの移動ステートの種類
     /// </summary>
     public enum PlayerMovementState
     {
@@ -14,18 +14,15 @@ public static class PlayerStateManager
         Running = 2
     }
     /// <summary>
-    ///     
+    /// プレイヤーの移動ステート
     /// </summary>
     private static PlayerMovementState movementState;
-    public static PlayerMovementState MovementState
-    {
-        get => movementState;
-    }
+    public static PlayerMovementState MovementState { get => movementState; }
     #endregion
 
     #region [func]
     /// <summary>
-    /// 
+    /// プレイヤーの移動ステートをセット
     /// </summary>
     /// <param name="state"></param>
     public static void SetPlayerMovementState(PlayerMovementState state)
@@ -35,5 +32,4 @@ public static class PlayerStateManager
     #endregion
     
     #endregion
-    
 }
