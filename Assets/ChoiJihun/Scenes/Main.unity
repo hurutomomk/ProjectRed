@@ -205,6 +205,7 @@ MonoBehaviour:
   walkingSpeed: 1.5
   runningSpeed: 3
   pointer: {fileID: 221848721}
+  fovSprite: {fileID: 621610201}
 --- !u!1 &221848720
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,7 +248,7 @@ GameObject:
   - component: {fileID: 316638746}
   - component: {fileID: 316638747}
   m_Layer: 13
-  m_Name: VisionAreaSprite_Main
+  m_Name: FOVSprite_Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -360,7 +361,7 @@ GameObject:
   - component: {fileID: 472880034}
   - component: {fileID: 472880035}
   m_Layer: 14
-  m_Name: VisionAreaSprite_Sub
+  m_Name: FOVSprite_Sub
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

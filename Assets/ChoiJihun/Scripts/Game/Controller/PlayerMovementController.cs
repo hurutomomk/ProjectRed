@@ -49,9 +49,9 @@ public class PlayerMovementController : MonoBehaviour
         // Pointer座標初期化
         this.pointer.position = this.transform.position;
         
-        // 移動ボタン押下判定コルーチンの開始準備
+        // 移動ボタン入力判定コルーチンの開始
         this.CatchPlayerMovementInputAsync();
-        //
+        // 移動速度変更ボタン入力判定コルーチンの開始
         this.CatchPlayerChangingSpeedInputAsync();
     }
     #endregion
@@ -67,7 +67,7 @@ public class PlayerMovementController : MonoBehaviour
     }
 
     /// <summary>
-    /// 移動入力判定コルーチン
+    /// 移動ボタン入力判定コルーチン
     /// </summary>
     /// <returns></returns>
     IEnumerator CatchPlayerMovementInput()
@@ -93,7 +93,6 @@ public class PlayerMovementController : MonoBehaviour
                 }
             }
             
-           //yield return null;
            yield return new WaitForFixedUpdate();
         }
     }
@@ -111,6 +110,7 @@ public class PlayerMovementController : MonoBehaviour
     #endregion
 
 
+    #region [02. 移動速度変ボタン更入力判定]
     /// <summary>
     /// 移動速度変更ボタン入力コルーチンの開始
     /// </summary>
@@ -160,6 +160,7 @@ public class PlayerMovementController : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
-   
     #endregion
+    
+   #endregion
 }
