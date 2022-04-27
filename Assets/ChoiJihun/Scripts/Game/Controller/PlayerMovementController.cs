@@ -1,8 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-
-
 public class PlayerMovementController : MonoBehaviour
 {
     #region [var]
@@ -74,7 +72,7 @@ public class PlayerMovementController : MonoBehaviour
     /// <returns></returns>
     IEnumerator CatchPlayerMovementInput()
     {
-        Debug.LogFormat($"Player Movement Input Activated", DColor.cyan);
+        Debug.LogFormat($"【Coroutine】  Player Movement Input Activated", DColor.white);
         
         while (true)
         {
@@ -126,9 +124,9 @@ public class PlayerMovementController : MonoBehaviour
     /// 移動速度変更ボタン入力コルーチン
     /// </summary>
     /// <returns></returns>
-    IEnumerator CatchPlayerChangingSpeedInput()
+    IEnumerator CatchPlayerChangingSpeedInput() 
     {
-        Debug.LogFormat($"Player Changing Speed Input Activated", DColor.cyan);
+        Debug.LogFormat($"【Coroutine】  Player Changing Speed Input Activated", DColor.white);
         
         while (true)
         {

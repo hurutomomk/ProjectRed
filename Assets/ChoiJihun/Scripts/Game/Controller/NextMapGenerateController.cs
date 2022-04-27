@@ -21,6 +21,7 @@ public class NextMapGenerateController : MonoBehaviour
 
     #region [02. map data]
 
+#pragma warning disable 414
     /// <summary>
     /// 確実にドアが存在する場合のトリガー
     /// </summary>
@@ -35,6 +36,8 @@ public class NextMapGenerateController : MonoBehaviour
     private bool doesEastDoorNotMatter = false;
     private bool doesSouthDoorNotMatter = false;
     private bool doesWestDoorNotMatter = false;
+#pragma warning restore 414
+
     /// <summary>
     /// 必ず必要なドア、絶対ないドアを保存するリスト
     /// </summary>
