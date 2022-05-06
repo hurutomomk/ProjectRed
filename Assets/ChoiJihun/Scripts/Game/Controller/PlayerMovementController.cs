@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -93,7 +94,8 @@ public class PlayerMovementController : MonoBehaviour
                 }
             }
             
-           yield return new WaitForFixedUpdate();
+           //yield return new WaitForFixedUpdate();
+           yield return null;
         }
     }
 
@@ -157,10 +159,12 @@ public class PlayerMovementController : MonoBehaviour
             // 更新
             this.movementState = PlayerStateManager.MovementState;
             
-            yield return new WaitForFixedUpdate();
+            //yield return new WaitForFixedUpdate();
+            yield return null;
         }
     }
     #endregion
-    
-   #endregion
+
+
+    #endregion
 }
